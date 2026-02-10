@@ -9,248 +9,129 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String appTitle = 'Flutter layout demo';
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(),
+    );
+  }
+}
 
-    return MaterialApp(
-      title: appTitle,
-      home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 79, 82, 79), //  خلفية 
-        appBar: AppBar(
-          title: const Text(appTitle),
-        ),
-        body: const SingleChildScrollView(
-          child: Column(
-            children: [
-              ImageSection(
-                image: 'images/lake.jpg',
-              ),
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
-              TitleSection(
-                name: 'Oeschinen Lake Campground',
-                location: 'Kandersteg, Switzerland',
-              ),
-              ButtonSection(),
-              TextSection(
-                description:
-                    'The night sky is filled with countless stars that light up the darkness. '
-'Many of these stars are part of distant galaxies, each containing billions '
-'of suns. From Earth, the Milky Way appears as a bright band stretching '
-'across the sky, a reminder of our place in the universe. Observing the '
-'stars can take you on a journey through time, because the light you see '
-'today may have traveled for thousands or even millions of years. With the '
-'help of telescopes, astronomers can explore nebulae, star clusters, and '
-'faraway galaxies, revealing the secrets of cosmic evolution. The universe '
-'is constantly expanding, and new discoveries continue to change our '
-'understanding of space and time.'
-,    
-              ),
-            ],
-          ),
-        ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('قائمة المنتجات'),
+        centerTitle: true,
       ),
-    );
-  }
-}
-
-/* -------- Image Section -------- */
-
-class ImageSection extends StatelessWidget {
-  const ImageSection({super.key, required this.image});
-
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      image,
-      width: 600,
-      height: 240,
-      fit: BoxFit.cover,
-    );
-  }
-}
-
-/* -------- Title Section -------- */
-
-class TitleSection extends StatelessWidget {
-  const TitleSection({
-    super.key,
-    required this.name,
-    required this.location,
-  });
-
-  final String name;
-  final String location;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  location,
-                  style: TextStyle(color: Colors.grey[500]),
-                ),
-              ],
-            ),
+      body: ListView(
+        padding: const EdgeInsets.all(8),
+        children: const [
+          ProductBox(
+            name: 'آيفون',
+            description: 'هاتف ذكي أنيق وسريع الأداء',
+            price: 1000,
+            color: Colors.purple,
           ),
-
-          // ===== FavoriteWidget =====
-          const FavoriteWidget(),
+          ProductBox(
+            name: 'بيكسل',
+            description: 'هاتف مميز بقدرات تصوير عالية',
+            price: 800,
+            color: Colors.blue,
+          ),
+          ProductBox(
+            name: 'لابتوب',
+            description: 'أفضل أداة للدراسة والبرمجة',
+            price: 2000,
+            color: Colors.green,
+          ),
+          ProductBox(
+            name: 'تابلت',
+            description: 'جهاز عملي للاجتماعات والدراسة',
+            price: 1500,
+            color: Colors.yellow,
+          ),
+          ProductBox(
+            name: 'فلاش ميموري',
+            description: 'وسيلة تخزين سهلة ومحمولة',
+            price: 100,
+            color: Colors.orange,
+          ),
         ],
       ),
     );
   }
 }
 
-/* -------- Favorite Widget (Stateful) -------- */
+class ProductBox extends StatelessWidget {
+  final String name;
+  final String description;
+  final int price;
+  final Color color;
 
-class FavoriteWidget extends StatefulWidget {
-  const FavoriteWidget({super.key});
-
-  @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
-}
-
-class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
-  int _favoriteCount = 41;
-
-  void _toggleFavorite() {
-    setState(() {
-      if (_isFavorited) {
-        _favoriteCount -= 1;
-        _isFavorited = false;
-      } else {
-        _favoriteCount += 1;
-        _isFavorited = true;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(0),
-          child: IconButton(
-            padding: const EdgeInsets.all(0),
-            alignment: Alignment.center,
-            icon: (_isFavorited
-                ? const Icon(Icons.star)
-                : const Icon(Icons.star_border)),
-            color: Colors.red[500],
-            onPressed: _toggleFavorite,
-          ),
-        ),
-        SizedBox(
-          width: 18,
-          child: SizedBox(
-            child: Text('$_favoriteCount'),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/* -------- Button Section -------- */
-
-class ButtonSection extends StatelessWidget {
-  const ButtonSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final Color color = Theme.of(context).primaryColor;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ButtonWithText(
-          color: color,
-          icon: Icons.call,
-          label: 'CALL',
-        ),
-        ButtonWithText(
-          color: color,
-          icon: Icons.near_me,
-          label: 'ROUTE',
-        ),
-        ButtonWithText(
-          color: color,
-          icon: Icons.share,
-          label: 'SHARE',
-        ),
-      ],
-    );
-  }
-}
-
-class ButtonWithText extends StatelessWidget {
-  const ButtonWithText({
+  const ProductBox({
     super.key,
+    required this.name,
+    required this.description,
+    required this.price,
     required this.color,
-    required this.icon,
-    required this.label,
   });
 
-  final Color color;
-  final IconData icon;
-  final String label;
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        height: 120,
+        child: Row(
+          children: [
+            Container(
+              width: 120,
+              height: 120,
               color: color,
+              alignment: Alignment.center,
+              child: Text(
+                name,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 250, 250, 250),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textDirection: TextDirection.rtl,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    description,
+                    textDirection: TextDirection.rtl,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    'السعر: $price',
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
-}
-
-/* -------- Text Section -------- */
-
-class TextSection extends StatelessWidget {
-  const TextSection({super.key, required this.description});
-
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        description,
-        softWrap: true,
       ),
     );
   }
