@@ -1,133 +1,159 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_crud/homepage.dart';
+import 'package:flutter_crud/loginpage.dart';
+import 'registrationpage.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Product Demo',
+      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        scaffoldBackgroundColor: Colors.grey[100],
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: MyHomePage(title: 'Products'),
-      debugShowCheckedModeBanner: false,
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Product Listing"),
-        centerTitle: true,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          ProductBox(
-            name: "Apple iPhone",
-            description: "هاتف ذكي بتصميم أنيق وأداء قوي مع كاميرا احترافية",
-            price: 1000,
-            image: "iphone.png",
-          ),
-          ProductBox(
-            name: "Google Pixel",
-            description: "أفضل تجربة أندرويد مع تحديثات سريعة وكاميرا مذهلة",
-            price: 800,
-            image: "pixel.png",
-          ),
-          ProductBox(
-            name: "Huawei Laptop",
-            description: "لابتوب قوي مناسب للعمل والبرمجة مع أداء عالي",
-            price: 2000,
-            image: "laptop.png",
-          ),
-          ProductBox(
-            name: "Honor Tablet",
-            description: "تابلت مثالي للاجتماعات والدراسة ومشاهدة المحتوى",
-            price: 1500,
-            image: "tablet.png",
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductBox extends StatelessWidget {
-  final String name;
-  final String description;
-  final int price;
-  final String image;
-
-  ProductBox({
-    Key? key,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.image,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 6),
-      height: 130,
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+        title: const Text(
+          'Aplikasi Manajemen Mahasiswa',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        child: Row(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                "assets/appimages/" + image,
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    Text(
-                      description,
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    Text(
-                      "Price: \$$price",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+      ),
+      body: Container(
+         decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFFFFFFFF),
+              Color.fromARGB(233, 237, 142, 142),
+              const Color(0xFFFF9300),
+            ],
+            stops: [0.0, 0.40, 1.0],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 16.0),
+              Card(
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextField(
+                        controller: _passwordController,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                        ),
+                        obscureText: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () async {
+                  final email = _emailController.text;
+                  final password = _passwordController.text;
+                  final result = await loginUser(email, password);
+                  if (result == 'Success') {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Login Success'),
+                        content: const Text('Your Login was successful!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close the dialog
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const HomePage()),
+                              ); // Navigate back to LoginPage
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text('Invalid email or password'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Login'),
+              ),
+              const SizedBox(height: 16.0),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegistrationPage()),
+                  );
+                },
+                child: const Text('Register'),
+              ),
+            ],
+          ),
         ),
       ),
     );
